@@ -1,10 +1,11 @@
 import { fastify } from "fastify";
 import { fastifyCors } from "@fastify/cors"
-import { serializerCompiler, validatorCompiler, hasZodFastifySchemaValidationErrors, jsonSchemaTransform} from 'fastify-type-provider-zod'
+import { serializerCompiler, validatorCompiler, hasZodFastifySchemaValidationErrors } from 'fastify-type-provider-zod'
 import { uploadImageRoute } from "./routes/upload-image";
 import fastifyMultipart from "@fastify/multipart";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
+import { transformSwaggerSchema } from "./transform-swagger-schema";
 
 const server = fastify();
 
@@ -40,7 +41,7 @@ server.register(fastifySwagger, {
             version: '1.0.0',
         },
     },
-    transform: jsonSchemaTransform
+    transform: transformSwaggerSchema
 })
 
 server.register(fastifySwaggerUi, {
