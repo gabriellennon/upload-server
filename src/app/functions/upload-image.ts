@@ -1,7 +1,9 @@
 import { db } from '@/infra/db';
 import { schema } from '@/infra/db/schemas';
+import { Either, makeLeft, makeRight } from '@/shared/either';
 import { Readable } from 'node:stream';
 import z from 'zod';
+import { InvalidFileFormat } from './errors/invalid-file-format';
 
 const uploadImageInput = z.object({
     fileName: z.string(),
@@ -13,11 +15,11 @@ type UploadImageInput = z.input<typeof uploadImageInput>;
 
 const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']
 
-export async function uploadImage(input: UploadImageInput){
+export async function uploadImage(input: UploadImageInput): Promise<Either<InvalidFileFormat, { url: string }>> {
     const { fileName, contentType, contentStream } = uploadImageInput.parse(input)
 
     if(!allowedMimeTypes.includes(contentType)){
-        throw new Error('Invalid file format')
+        return makeLeft(new InvalidFileFormat())
     }
 
     // TODO: Carregar imagem p/ Cloudfare ou R2
@@ -28,5 +30,5 @@ export async function uploadImage(input: UploadImageInput){
         remoteUrl: fileName,
     })
 
-
+    return makeRight({ url: '' })
 }
