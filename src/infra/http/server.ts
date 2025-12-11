@@ -7,6 +7,7 @@ import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { transformSwaggerSchema } from "./transform-swagger-schema";
 import { getUploadsRoute } from "./routes/get-uploads";
+import { exportUploadsRoute } from "./routes/export-uploads";
 
 const server = fastify();
 
@@ -52,6 +53,7 @@ server.register(fastifySwaggerUi, {
 server.register(uploadImageRoute)
 server.register(getUploadsRoute)
 server.register(fastifyMultipart)
+server.register(exportUploadsRoute)
 
 server.listen({
     port: 3333,
